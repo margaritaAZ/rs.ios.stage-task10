@@ -9,16 +9,7 @@ import UIKit
 
 class NewGameViewController: UIViewController {
     
-    var players: [String]?
-    
-    private let viewTitle: UILabel = {
-        let title = UILabel()
-        title.text = "Game Counter"
-        title.textColor = .white
-        title.font = UIFont(name: "Nunito-ExtraBold", size: 36)
-        title.translatesAutoresizingMaskIntoConstraints = false
-        return title
-    }()
+    var playersArray: [Player]?
     
     private let playersTable: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
@@ -26,9 +17,7 @@ class NewGameViewController: UIViewController {
         table.backgroundColor = .black
         table.layer.cornerRadius = 15
         table.separatorColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1)
-        table.tableFooterView = UIView(frame: .zero)
         table.isEditing = true
-        
         return table
     }()
     
@@ -48,29 +37,48 @@ class NewGameViewController: UIViewController {
         return button
     }()
     
+    let cancelButton: UIBarButtonItem = {
+        let button = UIBarButtonItem()
+        button.title = "Cancel"
+        
+        return button
+    }()
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        playersArray = Players().getFromStorage()
+        playersTable.reloadData()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setNeedsStatusBarAppearanceUpdate()
         setupViews()
         playersTable.delegate = self;
         playersTable.dataSource = self;
         playersTable.register(PlayerCell.self, forCellReuseIdentifier: "CellId")
-        playersTable.register(PlayerCell.self, forCellReuseIdentifier: "AddPlayerCell")
-        players = ["Kate", "Betty"]
-        //        self.navigationItem.title = "Game Counter"
-        //        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.title = "Game Counter"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.leftBarButtonItem = cancelButton
+        
+//        if playersArray?.count ?? 0 == 0 {
+//            startGameButton.isEnabled = false
+//        } else {
+//            startGameButton.isEnabled = true
+//        }
     }
 }
 
 extension NewGameViewController {
     private func setupViews () {
-        view.addSubview(viewTitle)
         view.addSubview(playersTable)
         view.addSubview(startGameButton)
         NSLayoutConstraint.activate([
-            viewTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
-            viewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            viewTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            playersTable.topAnchor.constraint(equalTo: viewTitle.bottomAnchor, constant: 25),
+            playersTable.topAnchor.constraint(equalTo: view.topAnchor, constant: 25),
             playersTable.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             playersTable.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             playersTable.bottomAnchor.constraint(equalTo: startGameButton.topAnchor, constant: -20),
@@ -79,12 +87,32 @@ extension NewGameViewController {
             startGameButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -64),
             startGameButton.heightAnchor.constraint(equalToConstant: 65)
         ])
+        
+        startGameButton.addTarget(self, action: #selector(startGame), for: .touchUpInside)
     }
+    @objc private func addPlayer() {
+        navigationController?.pushViewController(AddPlayerViewController(), animated: true)
+        
+    }
+    @objc private func startGame() {
+        navigationController?.pushViewController(GameProcessViewController(), animated: true)
+    }
+    
+    @objc func deleteButtonPressed(sender: UIButton) {
+        playersArray?.remove(at: sender.tag)
+        Players().saveToStorage(players: playersArray)
+        playersTable.reloadData()
+    }
+    
 }
 
 // MARK: - UITableViewDelegate
 extension NewGameViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        50
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         50
     }
     
@@ -100,32 +128,22 @@ extension NewGameViewController: UITableViewDelegate {
         .none
     }
     
-    
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        
-        guard let playersArray = players else {
+        guard let players = playersArray else {
             return
         }
-        let player = playersArray[sourceIndexPath.row]
-        players?.remove(at: sourceIndexPath.row)
-        if destinationIndexPath.row == playersArray.count {
-            players?.insert(player, at: playersArray.count-1)
-//            self.playersTable.moveRow(at: sourceIndexPath, to: IndexPath(row: playersArray.count-1, section: 0))
-        } else {
-            players?.insert(player, at: destinationIndexPath.row)
-            self.playersTable.moveRow(at: sourceIndexPath, to: destinationIndexPath)
-        }
+        let player = players[sourceIndexPath.row]
+        playersArray?.remove(at: sourceIndexPath.row)
+        playersArray?.insert(player, at: destinationIndexPath.row)
+        self.playersTable.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+        Players().saveToStorage(players: playersArray)
     }
-    
-    //    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-    //        50
-    //    }
 }
 
 // MARK: - UITableViewDataSource
 extension NewGameViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (players?.count ?? 0) + 1
+        return (playersArray?.count ?? 0)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -133,19 +151,10 @@ extension NewGameViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if indexPath.row == players?.count {
-            let cell = playersTable.dequeueReusableCell(withIdentifier: "AddPlayerCell", for: indexPath) as! PlayerCell
-            cell.titleLabel.text = "Add player"
-            cell.titleLabel.textColor = UIColor(named: "GulfStream")
-            cell.titleLabel.font = UIFont(name: "Nunito-SemiBold", size: 16)
-            cell.button.setImage(UIImage(named: "addPlayer"), for: .normal)
-            return cell
-        }
-        
         let cell = playersTable.dequeueReusableCell(withIdentifier: "CellId", for: indexPath) as! PlayerCell
-        cell.backgroundColor = UIColor(named: "DarkGray")
-        cell.titleLabel.text = players![indexPath.row]
+        cell.titleLabel.text = playersArray?[indexPath.row].name
+        cell.button.tag = indexPath.row
+        cell.button.addTarget(self, action: #selector(deleteButtonPressed), for: .touchUpInside)
         return cell
     }
     
@@ -167,32 +176,40 @@ extension NewGameViewController: UITableViewDataSource {
         return headerView
     }
     
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.row == players?.count {
-            return false
-        }
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView()
+        footerView.backgroundColor = UIColor(named: "DarkGray")
+        footerView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+        footerView.layer.cornerRadius = 15
         
-        return true
+        let dividerView = UIView()
+        dividerView.backgroundColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1)
+        
+        let addPlayerButton = UIButton(type: .custom)
+        addPlayerButton.setTitle("Add player", for: .normal)
+        addPlayerButton.tintColor = UIColor(named: "GulfStream")
+        addPlayerButton.titleLabel?.font = UIFont(name: "Nunito-SemiBold", size: 16)
+        addPlayerButton.setTitleColor(UIColor(named: "GulfStream"), for: .normal)
+        addPlayerButton.setImage(UIImage(named: "addPlayer"), for: .normal)
+        addPlayerButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
+        addPlayerButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
+        addPlayerButton.contentHorizontalAlignment = .left
+        
+        addPlayerButton.addTarget(self, action: #selector(addPlayer), for: .touchUpInside)
+        
+        footerView.addSubview(dividerView)
+        footerView.addSubview(addPlayerButton)
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        addPlayerButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dividerView.topAnchor.constraint(equalTo: footerView.topAnchor),
+            dividerView.heightAnchor.constraint(equalToConstant: 1),
+            dividerView.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 16),
+            dividerView.trailingAnchor.constraint(equalTo: footerView.trailingAnchor),
+            addPlayerButton.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 16),
+            addPlayerButton.centerYAnchor.constraint(equalTo: footerView.centerYAnchor),
+            addPlayerButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -16)
+        ])
+        return footerView
     }
-    
-    //    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-    //        let footerView = UIView()
-    //        footerView.backgroundColor = UIColor(named: "DarkGray")
-    //
-    //        let addPlayerButton = UIButton(type: .custom)
-    //        addPlayerButton.setTitle("Add player", for: .normal)
-    //        addPlayerButton.tintColor = UIColor(named: "GulfStream")
-    //        addPlayerButton.titleLabel?.font = UIFont(name: "Nunito-SemiBold", size: 16)
-    //        addPlayerButton.setTitleColor(UIColor(named: "GulfStream"), for: .normal)
-    //        addPlayerButton.setImage(UIImage(named: "addPlayer"), for: .normal)
-    //        addPlayerButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
-    //
-    //        footerView.addSubview(addPlayerButton)
-    //        addPlayerButton.translatesAutoresizingMaskIntoConstraints = false
-    //        NSLayoutConstraint.activate([
-    //            addPlayerButton.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 16),
-    //            addPlayerButton.centerYAnchor.constraint(equalTo: footerView.centerYAnchor)
-    //        ])
-    //        return footerView
-    //    }
 }

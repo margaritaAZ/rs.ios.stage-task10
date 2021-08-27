@@ -25,6 +25,22 @@ class PlayerCell: UITableViewCell {
         return button
     }()
     
+    let deleteView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }()
+    
+    let deleteLabel: UILabel = {
+       let label = UILabel()
+        label.text = "Delete"
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -51,12 +67,20 @@ class PlayerCell: UITableViewCell {
         backgroundColor = UIColor(named: "DarkGray")
         self.addSubview(button)
         self.addSubview(titleLabel)
+        self.addSubview(deleteView)
+        deleteView.addSubview(deleteLabel)
         
         NSLayoutConstraint.activate([
             button.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             button.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: button.trailingAnchor, constant: 15),
-            titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            deleteView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            deleteView.topAnchor.constraint(equalTo: self.topAnchor),
+            deleteView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            deleteView.widthAnchor.constraint(equalTo: self.heightAnchor),
+            deleteLabel.centerYAnchor.constraint(equalTo: deleteView.centerYAnchor),
+            deleteLabel.centerXAnchor.constraint(equalTo: deleteView.centerXAnchor)
         ])
     }
     
