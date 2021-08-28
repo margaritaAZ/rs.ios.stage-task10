@@ -6,9 +6,18 @@
 //
 
 import Foundation
+import UIKit
+
 struct Player: Codable {
     var name: String
     var score: Int = 0
+//    var turns = [Int]()
+//
+//    mutating func updateScore() {
+//        for turn in turns {
+//            score += turn
+//        }
+//    }
 }
 
 struct Players {
@@ -34,4 +43,11 @@ struct Players {
             print("Unable to Encode Array of Players (\(error))")
         }
     }
+}
+
+struct CollectionViewConstants {
+    static let leftDistanceToView: CGFloat = 40
+    static let rightDistanceToView: CGFloat = 40
+    static let minimumLineSpacing: CGFloat = 20
+    static let itemWidth = (UIScreen.main.bounds.width - CollectionViewConstants.leftDistanceToView - CollectionViewConstants.rightDistanceToView - CollectionViewConstants.minimumLineSpacing)
 }

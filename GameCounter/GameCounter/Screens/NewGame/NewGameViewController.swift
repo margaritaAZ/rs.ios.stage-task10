@@ -9,31 +9,23 @@ import UIKit
 
 class NewGameViewController: UIViewController {
     
-    var playersArray: [Player]?
+    var playersArray = Players().getFromStorage() ?? []
+    let maxPlayers = 6
     
     private let playersTable: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.translatesAutoresizingMaskIntoConstraints = false
         table.backgroundColor = .black
         table.layer.cornerRadius = 15
-        table.separatorColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1)
+        table.separatorColor = #colorLiteral(red: 0.3333333333, green: 0.3333333333, blue: 0.3333333333, alpha: 1)
         table.isEditing = true
         return table
     }()
     
     private let startGameButton: UIButton = {
-        let button = UIButton()
+        let button = StartGameButton()
         button.setTitle("Start game", for: .normal)
-        button.titleLabel?.font = UIFont(name: "Nunito-ExtraBold", size: 24)
-        button.titleLabel?.textColor = .white
-        button.titleLabel?.shadowOffset = CGSize(width: 0, height: 2)
-        button.setTitleShadowColor(UIColor(red: 0.329, green: 0.471, blue: 0.435, alpha: 1), for: .normal)
-        button.layer.cornerRadius = 32
-        button.layer.backgroundColor = UIColor(named: "GulfStream")?.cgColor
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.shadowOffset = CGSize(width: 0, height: 5)
-        button.layer.shadowOpacity = 1
-        button.layer.shadowColor = UIColor(red: 0.329, green: 0.471, blue: 0.435, alpha: 1).cgColor
         return button
     }()
     
@@ -50,8 +42,9 @@ class NewGameViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        playersArray = Players().getFromStorage()
+        playersArray = Players().getFromStorage() ?? []
         playersTable.reloadData()
+        isStatGameButtonEnable()
     }
     
     override func viewDidLoad() {
@@ -61,15 +54,9 @@ class NewGameViewController: UIViewController {
         playersTable.delegate = self;
         playersTable.dataSource = self;
         playersTable.register(PlayerCell.self, forCellReuseIdentifier: "CellId")
-        self.navigationItem.title = "Game Counter"
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.leftBarButtonItem = cancelButton
-        
-//        if playersArray?.count ?? 0 == 0 {
-//            startGameButton.isEnabled = false
-//        } else {
-//            startGameButton.isEnabled = true
-//        }
+        navigationItem.title = "Game Counter"
+        navigationController?.navigationBar.prefersLargeTitles = true
+//        navigationItem.leftBarButtonItem = cancelButton
     }
 }
 
@@ -99,10 +86,16 @@ extension NewGameViewController {
     }
     
     @objc func deleteButtonPressed(sender: UIButton) {
-        playersArray?.remove(at: sender.tag)
+        playersArray.remove(at: sender.tag)
         Players().saveToStorage(players: playersArray)
         playersTable.reloadData()
+        isStatGameButtonEnable()
     }
+    
+    private func isStatGameButtonEnable() {
+        startGameButton.isEnabled = playersArray.count != 0
+    }
+    
     
 }
 
@@ -129,12 +122,9 @@ extension NewGameViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard let players = playersArray else {
-            return
-        }
-        let player = players[sourceIndexPath.row]
-        playersArray?.remove(at: sourceIndexPath.row)
-        playersArray?.insert(player, at: destinationIndexPath.row)
+        let player = playersArray[sourceIndexPath.row]
+        playersArray.remove(at: sourceIndexPath.row)
+        playersArray.insert(player, at: destinationIndexPath.row)
         self.playersTable.moveRow(at: sourceIndexPath, to: destinationIndexPath)
         Players().saveToStorage(players: playersArray)
     }
@@ -143,7 +133,7 @@ extension NewGameViewController: UITableViewDelegate {
 // MARK: - UITableViewDataSource
 extension NewGameViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (playersArray?.count ?? 0)
+        return (playersArray.count)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -152,7 +142,7 @@ extension NewGameViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = playersTable.dequeueReusableCell(withIdentifier: "CellId", for: indexPath) as! PlayerCell
-        cell.titleLabel.text = playersArray?[indexPath.row].name
+        cell.titleLabel.text = playersArray[indexPath.row].name
         cell.button.tag = indexPath.row
         cell.button.addTarget(self, action: #selector(deleteButtonPressed), for: .touchUpInside)
         return cell
