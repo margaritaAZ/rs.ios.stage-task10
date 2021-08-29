@@ -35,7 +35,7 @@ extension RatingTableView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = dequeueReusableCell(withIdentifier: RatingCell.reuseId, for: indexPath) as! RatingCell
-        cell.placeLabel.text = "#\(indexPath.row)"
+        cell.placeLabel.text = "#\(indexPath.row + 1)"
         cell.nameLabel.text = cells[indexPath.row].name
         cell.scoreLabel.text = String(cells[indexPath.row].score)
         return cell

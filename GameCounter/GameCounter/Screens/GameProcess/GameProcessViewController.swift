@@ -23,6 +23,22 @@ class GameProcessViewController: UIViewController {
         return button
     }()
     
+    private let viewTitle: UILabel = {
+            let title = UILabel()
+            title.text = "Game"
+            title.textColor = .white
+            title.font = UIFont(name: "Nunito-ExtraBold", size: 36)
+            title.translatesAutoresizingMaskIntoConstraints = false
+            return title
+        }()
+    
+    private let diceButton: UIButton = {
+       let button = UIButton()
+        button.setImage(UIImage(named: "dice"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     private let timerLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Nunito-ExtraBold", size: 28)
@@ -86,6 +102,15 @@ class GameProcessViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
+    
+    private let diceView: UIView = {
+       let view = UIView()
+        view.backgroundColor = UIColor.clear
+        let blurEffect = UIBlurEffect(style: .dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = UIScreen.main.bounds
+        return view
+    }()
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,6 +120,7 @@ class GameProcessViewController: UIViewController {
         setupTimer()
         setupScoreButtons()
         playersCollectionView.cells = playersArray
+        diceButton.addTarget(self, action: #selector(openDiceScreen), for: .touchUpInside)
     }
 }
 
@@ -156,8 +182,7 @@ extension GameProcessViewController {
     private func setupNavigationBarItems() {
         navigationItem.leftBarButtonItem = newGameButton
         navigationItem.rightBarButtonItem = resultsButton
-        navigationItem.title = "Game"
-        
+
         newGameButton.target = self
         newGameButton.action = #selector(openNewGameScreen)
         
@@ -166,6 +191,8 @@ extension GameProcessViewController {
     }
     
     private func setupViews() {
+        view.addSubview(viewTitle)
+        view.addSubview(diceButton)
         view.addSubview(timerLabel)
         view.addSubview(playButton)
         view.addSubview(pauseButton)
@@ -174,9 +201,15 @@ extension GameProcessViewController {
         view.addSubview(undoButton)
         view.addSubview(playersLettersLabel)
         view.addSubview(scoreButtonsStackView)
+//        view.addSubview(diceView)
+//        view.bringSubviewToFront(diceView)
 
         NSLayoutConstraint.activate([
-            timerLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 29),
+            viewTitle.topAnchor.constraint(equalTo: view.topAnchor),
+            viewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            diceButton.centerYAnchor.constraint(equalTo: viewTitle.centerYAnchor),
+            diceButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            timerLabel.topAnchor.constraint(equalTo: viewTitle.bottomAnchor, constant: 20),
             timerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             playButton.leadingAnchor.constraint(equalTo: timerLabel.trailingAnchor, constant: 28),
             playButton.centerYAnchor.constraint(equalTo: timerLabel.centerYAnchor),
@@ -206,5 +239,12 @@ extension GameProcessViewController {
     
     @objc func openResults() {
         navigationController?.pushViewController(ResultsViewController(), animated: true)
+    }
+    
+    @objc func openDiceScreen() {
+        let rollVC = RollViewController()
+        rollVC.modalPresentationStyle = .overCurrentContext
+        rollVC.modalTransitionStyle = .crossDissolve
+        present(rollVC, animated: true, completion: nil)
     }
 }

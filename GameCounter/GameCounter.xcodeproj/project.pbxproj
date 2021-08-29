@@ -18,6 +18,7 @@
 		F3AA09A126DAB19A00042F93 /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA09A026DAB19A00042F93 /* ResultsViewController.swift */; };
 		F3AA09A326DAB9C200042F93 /* RatingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA09A226DAB9C200042F93 /* RatingCell.swift */; };
 		F3AA09A526DABCF700042F93 /* RatingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA09A426DABCF700042F93 /* RatingTableView.swift */; };
+		F3AA09A826DB956400042F93 /* RollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA09A726DB956400042F93 /* RollViewController.swift */; };
 		F3B4735026D6461A0071155F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B4734F26D6461A0071155F /* AppDelegate.swift */; };
 		F3B4735926D6461C0071155F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3B4735826D6461C0071155F /* Assets.xcassets */; };
 		F3B4735C26D6461C0071155F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3B4735A26D6461C0071155F /* LaunchScreen.storyboard */; };
@@ -38,6 +39,7 @@
 		F3AA09A026DAB19A00042F93 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		F3AA09A226DAB9C200042F93 /* RatingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingCell.swift; sourceTree = "<group>"; };
 		F3AA09A426DABCF700042F93 /* RatingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingTableView.swift; sourceTree = "<group>"; };
+		F3AA09A726DB956400042F93 /* RollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RollViewController.swift; sourceTree = "<group>"; };
 		F3B4734C26D6461A0071155F /* GameCounter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameCounter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3B4734F26D6461A0071155F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F3B4735826D6461C0071155F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 		F3AA099326D93FE400042F93 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				F3AA09A626DB954500042F93 /* Roll */,
 				F3AA099F26DAB17600042F93 /* Results */,
 				F3AA099626D9401A00042F93 /* GameProcess */,
 				F3AA099526D9400200042F93 /* AddPlayer */,
@@ -114,6 +117,14 @@
 				F3AA09A426DABCF700042F93 /* RatingTableView.swift */,
 			);
 			path = Results;
+			sourceTree = "<group>";
+		};
+		F3AA09A626DB954500042F93 /* Roll */ = {
+			isa = PBXGroup;
+			children = (
+				F3AA09A726DB956400042F93 /* RollViewController.swift */,
+			);
+			path = Roll;
 			sourceTree = "<group>";
 		};
 		F3B4734326D6461A0071155F = {
@@ -235,6 +246,7 @@
 				F3AA09A526DABCF700042F93 /* RatingTableView.swift in Sources */,
 				F3AA09A126DAB19A00042F93 /* ResultsViewController.swift in Sources */,
 				F3AA099E26DA9EB400042F93 /* StartGameButton.swift in Sources */,
+				F3AA09A826DB956400042F93 /* RollViewController.swift in Sources */,
 				F3AA099C26DA5E1B00042F93 /* CircleButton.swift in Sources */,
 				F3AA098D26D818F000042F93 /* AddPlayerViewController.swift in Sources */,
 				F3B4735026D6461A0071155F /* AppDelegate.swift in Sources */,

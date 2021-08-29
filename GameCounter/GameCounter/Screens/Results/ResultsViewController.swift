@@ -21,6 +21,15 @@ class ResultsViewController: UIViewController {
         return button
     }()
     
+    private let viewTitle: UILabel = {
+            let title = UILabel()
+            title.text = "Results"
+            title.textColor = .white
+            title.font = UIFont(name: "Nunito-ExtraBold", size: 36)
+            title.translatesAutoresizingMaskIntoConstraints = false
+            return title
+        }()
+    
     private let ratingTableView = RatingTableView()
 
     override func viewDidLoad() {
@@ -34,7 +43,6 @@ class ResultsViewController: UIViewController {
 
 extension ResultsViewController {
     func setupNavigationBarItems() {
-        navigationItem.title = "Results"
         navigationItem.leftBarButtonItem = newGameButton
         newGameButton.target = self
         newGameButton.action = #selector(openNewGameScreen)
@@ -45,15 +53,17 @@ extension ResultsViewController {
     }
     
     func setupViews() {
+        view.addSubview(viewTitle)
         view.addSubview(ratingTableView)
         
         NSLayoutConstraint.activate([
-            ratingTableView.topAnchor.constraint(equalTo: view.topAnchor),
+            viewTitle.topAnchor.constraint(equalTo: view.topAnchor),
+            viewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            ratingTableView.topAnchor.constraint(equalTo: viewTitle.bottomAnchor, constant: 15),
             ratingTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             ratingTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             ratingTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
         ])
-        
     }
     
     @objc func openNewGameScreen() {

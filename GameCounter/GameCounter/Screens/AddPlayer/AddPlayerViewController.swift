@@ -22,6 +22,14 @@ class AddPlayerViewController: UIViewController {
         return addButton
     }()
     
+    private let viewTitle: UILabel = {
+            let title = UILabel()
+            title.text = "Add Player"
+            title.textColor = .white
+            title.font = UIFont(name: "Nunito-ExtraBold", size: 36)
+            title.translatesAutoresizingMaskIntoConstraints = false
+            return title
+        }()
     
     let playerName: UITextField = {
         let name = UITextField()
@@ -53,8 +61,6 @@ class AddPlayerViewController: UIViewController {
 
 extension AddPlayerViewController {
     func setupViews() {
-        navigationItem.title = "Add Player"
-        navigationController?.navigationBar.prefersLargeTitles = true
         backButton.action = #selector(backToPlayersList)
         backButton.target = self
         navigationItem.leftBarButtonItem = backButton
@@ -62,9 +68,12 @@ extension AddPlayerViewController {
         addButton.target = self
         addButton.action = #selector(addPlayer)
         
+        view.addSubview(viewTitle)
         view.addSubview(playerName)
         NSLayoutConstraint.activate([
-            playerName.topAnchor.constraint(equalTo: view.topAnchor, constant: 25),
+            viewTitle.topAnchor.constraint(equalTo: view.topAnchor),
+            viewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            playerName.topAnchor.constraint(equalTo: viewTitle.bottomAnchor, constant: 20),
             playerName.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             playerName.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             playerName.heightAnchor.constraint(equalToConstant: 60)

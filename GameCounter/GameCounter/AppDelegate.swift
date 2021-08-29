@@ -21,15 +21,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().barTintColor = .black
         UINavigationBar.appearance().largeTitleTextAttributes = [
             .font: UIFont(name: "Nunito-ExtraBold", size: 36)!]
-        if #available(iOS 13.0, *) {
-            let buttonAppearance = UIBarButtonItemAppearance()
-            buttonAppearance.normal.titleTextAttributes = [
-                .foregroundColor: UIColor(named: "GulfStream")!,
-                .font: UIFont(name: "Nunito-ExtraBold", size: 17)!
-            ]
-            navigationVC.navigationItem.standardAppearance?.buttonAppearance = buttonAppearance
-            navigationVC.navigationItem.compactAppearance?.buttonAppearance = buttonAppearance
-        } else {
+//        if #available(iOS 13.0, *) {
+//            let buttonAppearance = UIBarButtonItemAppearance()
+//            buttonAppearance.normal.titleTextAttributes = [
+//                .foregroundColor: UIColor(named: "GulfStream")!,
+//                .font: UIFont(name: "Nunito-ExtraBold", size: 17)!
+//            ]
+//            navigationVC.navigationItem.standardAppearance?.buttonAppearance = buttonAppearance
+//            navigationVC.navigationItem.compactAppearance?.buttonAppearance = buttonAppearance
+//        } else {
             // Fallback on earlier versions
             UIBarButtonItem.appearance().setTitleTextAttributes([
                 .foregroundColor: UIColor(named: "GulfStream")!,
@@ -42,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 .font: UIFont(name: "Nunito-ExtraBold", size: 17)!,
                 .foregroundColor: UIColor.gray
             ], for: .highlighted)
-        }
+//        }
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = navigationVC

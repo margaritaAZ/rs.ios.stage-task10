@@ -12,6 +12,15 @@ class NewGameViewController: UIViewController {
     var playersArray = Players().getFromStorage() ?? []
     let maxPlayers = 6
     
+    private let viewTitle: UILabel = {
+            let title = UILabel()
+            title.text = "Game Counter"
+            title.textColor = .white
+            title.font = UIFont(name: "Nunito-ExtraBold", size: 36)
+            title.translatesAutoresizingMaskIntoConstraints = false
+            return title
+        }()
+    
     private let playersTable: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -49,23 +58,24 @@ class NewGameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setNeedsStatusBarAppearanceUpdate()
+//        setNeedsStatusBarAppearanceUpdate()
         setupViews()
         playersTable.delegate = self;
         playersTable.dataSource = self;
         playersTable.register(PlayerCell.self, forCellReuseIdentifier: "CellId")
-        navigationItem.title = "Game Counter"
-        navigationController?.navigationBar.prefersLargeTitles = true
-//        navigationItem.leftBarButtonItem = cancelButton
+        navigationItem.leftBarButtonItem = cancelButton
     }
 }
 
 extension NewGameViewController {
     private func setupViews () {
+        view.addSubview(viewTitle)
         view.addSubview(playersTable)
         view.addSubview(startGameButton)
         NSLayoutConstraint.activate([
-            playersTable.topAnchor.constraint(equalTo: view.topAnchor, constant: 25),
+            viewTitle.topAnchor.constraint(equalTo: view.topAnchor),
+            viewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            playersTable.topAnchor.constraint(equalTo: viewTitle.bottomAnchor, constant: 20),
             playersTable.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             playersTable.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             playersTable.bottomAnchor.constraint(equalTo: startGameButton.topAnchor, constant: -20),
