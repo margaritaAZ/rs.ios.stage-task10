@@ -63,9 +63,9 @@ extension PlayersCollectionView: UICollectionViewDataSource {
         cell.addSubview(scoreLabel)
         
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: cell.topAnchor, constant: 24),
+            nameLabel.topAnchor.constraint(equalTo: cell.topAnchor, constant: 20),
             nameLabel.centerXAnchor.constraint(equalTo: cell.centerXAnchor),
-            scoreLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -80),
+            scoreLabel.centerYAnchor.constraint(equalTo: cell.centerYAnchor, constant: 10),
             scoreLabel.centerXAnchor.constraint(equalTo: cell.centerXAnchor)
         ])
         

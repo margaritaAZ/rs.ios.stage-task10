@@ -51,3 +51,12 @@ struct CollectionViewConstants {
     static let minimumLineSpacing: CGFloat = 20
     static let itemWidth = (UIScreen.main.bounds.width - CollectionViewConstants.leftDistanceToView - CollectionViewConstants.rightDistanceToView - CollectionViewConstants.minimumLineSpacing)
 }
+
+struct GameProcessConstants {
+    static let timerToTitle: CGFloat = 20
+    static let playersToTimer: CGFloat = 20
+    static let bigScoreButtonToPlayers: CGFloat = 20
+    static let smallButtonsToBigButton: CGFloat = 20
+    static let playersLettersToSmallButtons: CGFloat = 20
+    static let playersLettersToBottom: CGFloat = 30
+}

@@ -24,16 +24,16 @@ class GameProcessViewController: UIViewController {
     }()
     
     private let viewTitle: UILabel = {
-            let title = UILabel()
-            title.text = "Game"
-            title.textColor = .white
-            title.font = UIFont(name: "Nunito-ExtraBold", size: 36)
-            title.translatesAutoresizingMaskIntoConstraints = false
-            return title
-        }()
+        let title = UILabel()
+        title.text = "Game"
+        title.textColor = .white
+        title.font = UIFont(name: "Nunito-ExtraBold", size: 36)
+        title.translatesAutoresizingMaskIntoConstraints = false
+        return title
+    }()
     
     private let diceButton: UIButton = {
-       let button = UIButton()
+        let button = UIButton()
         button.setImage(UIImage(named: "dice"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -65,11 +65,12 @@ class GameProcessViewController: UIViewController {
     
     private var timer: Timer?
     private var timerStart = Date()
+    private var prevTimerValue = TimeInterval()
     
     private let playersCollectionView = PlayersCollectionView()
     
     private let plusOneButton: CircleButton = {
-       let button = CircleButton()
+        let button = CircleButton()
         button.setTitle("+1", for: .normal)
         button.titleLabel?.font = UIFont(name: "Nunito-ExtraBold", size: 40)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -78,7 +79,7 @@ class GameProcessViewController: UIViewController {
     }()
     
     private let undoButton: UIButton = {
-       let button = UIButton()
+        let button = UIButton()
         button.setImage(UIImage(named: "undo"), for: .normal)
         button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -95,7 +96,7 @@ class GameProcessViewController: UIViewController {
     }()
     
     private let scoreButtonsStackView: UIStackView = {
-       let stackView = UIStackView()
+        let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
         stackView.spacing = 15
@@ -103,41 +104,36 @@ class GameProcessViewController: UIViewController {
         return stackView
     }()
     
-    private let diceView: UIView = {
-       let view = UIView()
-        view.backgroundColor = UIColor.clear
-        let blurEffect = UIBlurEffect(style: .dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = UIScreen.main.bounds
-        return view
-    }()
-        
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBarItems()
         setupViews()
         setupPlayersLettersLabel()
-        setupTimer()
+        startTimer()
         setupScoreButtons()
         playersCollectionView.cells = playersArray
+        pauseButton.addTarget(self, action: #selector(pauseTimer), for: .touchUpInside)
+        playButton.addTarget(self, action: #selector(startTimer), for: .touchUpInside)
         diceButton.addTarget(self, action: #selector(openDiceScreen), for: .touchUpInside)
     }
 }
 
 extension GameProcessViewController {
-    private func setupTimer() {
-        if timer == nil {
-            timer = Timer.scheduledTimer(timeInterval: 1.0,
-                                         target: self,
-                                         selector: #selector(updateTimer),
-                                         userInfo: nil,
-                                         repeats: true)
-            timerStart = Date()
-        }
+    @objc func startTimer() {
+        timerLabel.textColor = .white
+        pauseButton.isHidden = false
+        playButton.isHidden = true
+        timer = Timer.scheduledTimer(timeInterval: 1.0,
+                                     target: self,
+                                     selector: #selector(updateTimer),
+                                     userInfo: nil,
+                                     repeats: true)
+        timerStart = Date()
+        prevTimerValue = getTimerFromStorage() ?? TimeInterval()
     }
     
     @objc func updateTimer() {
-        let time = Date().timeIntervalSince(timerStart)
+        let time = Date().timeIntervalSince(timerStart) + prevTimerValue
         
         let minutes = Int(time) / 60 % 60
         let seconds = Int(time) % 60
@@ -154,6 +150,38 @@ extension GameProcessViewController {
             times.append("\(seconds)")
         }
         timerLabel.text = times.joined(separator: ":")
+    }
+    
+    @objc func pauseTimer() {
+        timer?.invalidate()
+        saveTimerToStorage()
+        timerLabel.textColor = UIColor(named: "DarkGray")
+        pauseButton.isHidden = true
+        playButton.isHidden = false
+    }
+    
+    private func saveTimerToStorage() {
+        let time = Date().timeIntervalSince(timerStart) + prevTimerValue.rounded(.down)
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(time)
+            UserDefaults.standard.set(data, forKey: "timer")
+        } catch {
+            print("Unable to Encode Timer (\(error))")
+        }
+    }
+    
+    private func getTimerFromStorage() -> TimeInterval? {
+        if let data = UserDefaults.standard.data(forKey: "timer") {
+            do {
+                let decoder = JSONDecoder()
+                let time = try decoder.decode(TimeInterval.self, from: data)
+                return time
+            } catch {
+                print("Unable to Decode Timer (\(error))")
+            }
+        }
+        return nil
     }
     
     private func setupPlayersLettersLabel() {
@@ -182,7 +210,7 @@ extension GameProcessViewController {
     private func setupNavigationBarItems() {
         navigationItem.leftBarButtonItem = newGameButton
         navigationItem.rightBarButtonItem = resultsButton
-
+        
         newGameButton.target = self
         newGameButton.action = #selector(openNewGameScreen)
         
@@ -197,39 +225,37 @@ extension GameProcessViewController {
         view.addSubview(playButton)
         view.addSubview(pauseButton)
         view.addSubview(playersCollectionView)
-//        view.addSubview(plusOneButton)
+        view.addSubview(plusOneButton)
         view.addSubview(undoButton)
         view.addSubview(playersLettersLabel)
         view.addSubview(scoreButtonsStackView)
-//        view.addSubview(diceView)
-//        view.bringSubviewToFront(diceView)
-
+        
         NSLayoutConstraint.activate([
             viewTitle.topAnchor.constraint(equalTo: view.topAnchor),
             viewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             diceButton.centerYAnchor.constraint(equalTo: viewTitle.centerYAnchor),
             diceButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            timerLabel.topAnchor.constraint(equalTo: viewTitle.bottomAnchor, constant: 20),
+            timerLabel.topAnchor.constraint(equalTo: viewTitle.bottomAnchor, constant: GameProcessConstants.timerToTitle),
             timerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             playButton.leadingAnchor.constraint(equalTo: timerLabel.trailingAnchor, constant: 28),
             playButton.centerYAnchor.constraint(equalTo: timerLabel.centerYAnchor),
             pauseButton.leadingAnchor.constraint(equalTo: timerLabel.trailingAnchor, constant: 28),
             pauseButton.centerYAnchor.constraint(equalTo: timerLabel.centerYAnchor),
-            playersCollectionView.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 42),
+            playersCollectionView.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: GameProcessConstants.playersToTimer),
             playersCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             playersCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            playersCollectionView.heightAnchor.constraint(equalToConstant: 300),
-//            plusOneButton.topAnchor.constraint(equalTo: playersCollectionView.bottomAnchor, constant: 28),
-//            plusOneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            plusOneButton.widthAnchor.constraint(equalToConstant: 90),
-//            plusOneButton.heightAnchor.constraint(equalToConstant: 90),
+            plusOneButton.topAnchor.constraint(equalTo: playersCollectionView.bottomAnchor, constant: GameProcessConstants.bigScoreButtonToPlayers),
+            plusOneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            plusOneButton.widthAnchor.constraint(equalToConstant: 90),
+            plusOneButton.heightAnchor.constraint(equalToConstant: 90),
             undoButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -32),
             undoButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-            playersLettersLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
+            playersLettersLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -GameProcessConstants.playersLettersToBottom),
             playersLettersLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            scoreButtonsStackView.topAnchor.constraint(equalTo: plusOneButton.bottomAnchor, constant: 15),
             scoreButtonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             scoreButtonsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            scoreButtonsStackView.bottomAnchor.constraint(equalTo: playersLettersLabel.topAnchor, constant: -20)
+            scoreButtonsStackView.bottomAnchor.constraint(equalTo: playersLettersLabel.topAnchor, constant: -GameProcessConstants.playersLettersToSmallButtons)
         ])
     }
     
