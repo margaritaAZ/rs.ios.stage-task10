@@ -40,21 +40,22 @@ private extension PlayersCollectionView {
         let proportionalOffset = collectionViewLayout.collectionView!.contentOffset.x / CollectionViewConstants.itemWidth
         let index = Int(round(proportionalOffset))
         let safeIndex = max(0, min(cells.count - 1, index))
-        //        print ("\(collectionViewLayout.collectionView!.contentOffset)    \(CollectionViewConstants.itemWidth)")
+//                print ("\(collectionViewLayout.collectionView!.contentOffset)    \(CollectionViewConstants.itemWidth)")
         return safeIndex
     }
     
     func getActiveCellIndexPath() {
-        let cellCenterPoint = CGPoint(x: collectionViewLayout.collectionView!.center.x + collectionViewLayout.collectionView!.contentOffset.x + CollectionViewConstants.leftDistanceToView, y: collectionViewLayout.collectionView!.center.y)
-        //            print("central point: \(cellCenterPoint) -- \(collectionViewLayout.collectionView!.center) -- \(collectionViewLayout.collectionView!.contentOffset)")
-        activeCellPath = (collectionViewLayout.collectionView?.indexPathForItem(at: cellCenterPoint))
+        let cellCenterPoint = CGPoint(x: center.x + contentOffset.x + CollectionViewConstants.leftDistanceToView,
+                                      y: center.y)
+        print("central point: \(cellCenterPoint) -- \(collectionViewLayout.collectionView!.center) -- \(collectionViewLayout.collectionView!.contentOffset) -- \(UIScreen.main.bounds)")
+        activeCellPath = indexPathForItem(at: cellCenterPoint)
     }
 }
 
 // MARK: - Public Interface
 extension PlayersCollectionView {
     func scrollToItem(_ index: Int) {
-        collectionViewLayout.collectionView!.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: true)
+        scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: true)
     }
     
     func getActivePlayerIndex() -> Int {

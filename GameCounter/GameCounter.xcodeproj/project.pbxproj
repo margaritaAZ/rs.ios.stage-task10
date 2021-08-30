@@ -26,6 +26,7 @@
 		F3B4736426D64B2A0071155F /* NewGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B4736326D64B2A0071155F /* NewGameViewController.swift */; };
 		F3B4736826D66BE00071155F /* Nunito-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3B4736626D66BDF0071155F /* Nunito-SemiBold.ttf */; };
 		F3B4736926D66BE00071155F /* Nunito-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3B4736726D66BE00071155F /* Nunito-ExtraBold.ttf */; };
+		F3D3DEC626DD60CA0074B654 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D3DEC526DD60CA0074B654 /* Helpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		F3B4736326D64B2A0071155F /* NewGameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameViewController.swift; sourceTree = "<group>"; };
 		F3B4736626D66BDF0071155F /* Nunito-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-SemiBold.ttf"; sourceTree = "<group>"; };
 		F3B4736726D66BE00071155F /* Nunito-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-ExtraBold.ttf"; sourceTree = "<group>"; };
+		F3D3DEC526DD60CA0074B654 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,11 +161,12 @@
 			children = (
 				F3AA099326D93FE400042F93 /* Screens */,
 				F3AA099226D93FCB00042F93 /* Data */,
-				F3B4736526D66B140071155F /* Fonts */,
 				F3B4734F26D6461A0071155F /* AppDelegate.swift */,
 				F3B4735826D6461C0071155F /* Assets.xcassets */,
 				F3B4735A26D6461C0071155F /* LaunchScreen.storyboard */,
 				F3B4735D26D6461C0071155F /* Info.plist */,
+				F3B4736526D66B140071155F /* Fonts */,
+				F3D3DEC426DD60860074B654 /* Util */,
 			);
 			path = GameCounter;
 			sourceTree = "<group>";
@@ -176,6 +179,14 @@
 				F3B4736626D66BDF0071155F /* Nunito-SemiBold.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		F3D3DEC426DD60860074B654 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				F3D3DEC526DD60CA0074B654 /* Helpers.swift */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,6 +274,7 @@
 				F3B4735026D6461A0071155F /* AppDelegate.swift in Sources */,
 				F3AA098F26D9162C00042F93 /* Data.swift in Sources */,
 				F3B4736426D64B2A0071155F /* NewGameViewController.swift in Sources */,
+				F3D3DEC626DD60CA0074B654 /* Helpers.swift in Sources */,
 				F3AA09AC26DD022300042F93 /* PlayerCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

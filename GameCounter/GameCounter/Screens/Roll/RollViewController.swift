@@ -11,18 +11,13 @@ class RollViewController: UIViewController {
     
     lazy var blurredView: UIView = {
         let containerView = UIView()
-        var blurEffect = UIBlurEffect(style: .dark)
+        var blurEffect = UIBlurEffect(style: .regular)
 //        if #available(iOS 13.0, *) {
 //            blurEffect = UIBlurEffect(style: .systemThickMaterialLight)
 //        }
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = self.view.bounds
-        let dimmedView = UIView()
-        dimmedView.backgroundColor = .black.withAlphaComponent(0.6)
-        dimmedView.frame = self.view.bounds
-        
         containerView.addSubview(blurEffectView)
-//                    containerView.addSubview(dimmedView)
         return containerView
     }()
     
@@ -31,7 +26,6 @@ class RollViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()

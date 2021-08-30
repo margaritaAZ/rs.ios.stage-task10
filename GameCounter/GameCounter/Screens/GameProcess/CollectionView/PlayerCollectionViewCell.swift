@@ -12,8 +12,8 @@ class PlayerCollectionViewCell: UICollectionViewCell {
     
     let nameLabel: UILabel = {
         let nameLabel = UILabel()
-        nameLabel.textColor = UIColor(named: "Orange")
-        nameLabel.font = UIFont(name: "Nunito-ExtraBold", size: 28)
+        nameLabel.textColor = UIColor.manhattan
+        nameLabel.font = UIFont.nunito(28, .extraBold)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         return nameLabel
     }()
@@ -21,23 +21,23 @@ class PlayerCollectionViewCell: UICollectionViewCell {
     let scoreLabel: UILabel = {
         let scoreLabel = UILabel()
         scoreLabel.textColor = .white
-        scoreLabel.font = UIFont(name: "Nunito-Bold", size: 100)
+        scoreLabel.font = UIFont.nunito(100, .bold)
         scoreLabel.translatesAutoresizingMaskIntoConstraints = false
         return scoreLabel
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor(named: "DarkGray")
+        backgroundColor = UIColor.veryDarkGray
         layer.cornerRadius = 15
         
         addSubview(nameLabel)
         addSubview(scoreLabel)
         
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+            nameLabel.topAnchor.constraint(lessThanOrEqualTo: topAnchor, constant: 20),
             nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            scoreLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 10),
+            scoreLabel.centerYAnchor.constraint(lessThanOrEqualTo: centerYAnchor, constant: 10),
             scoreLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }

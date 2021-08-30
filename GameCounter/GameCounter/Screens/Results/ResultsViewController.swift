@@ -25,7 +25,7 @@ class ResultsViewController: UIViewController {
             let title = UILabel()
             title.text = "Results"
             title.textColor = .white
-            title.font = UIFont(name: "Nunito-ExtraBold", size: 36)
+        title.font = UIFont.nunito(36, .extraBold)
             title.translatesAutoresizingMaskIntoConstraints = false
             return title
         }()
@@ -34,14 +34,22 @@ class ResultsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        ratingTableView.cells = Players().getFromStorage() ?? []
+        var playersArray = (Players().getFromStorage() ?? [])
+        playersArray = playersArray.sorted {
+            if $0.score != $1.score {
+                return $0.score > $1.score
+            } else {
+                return $0.name < $1.name
+            }
+        }
+        ratingTableView.cells = playersArray
         setupNavigationBarItems()
         setupViews()
     }
+    
 }
 
-extension ResultsViewController {
+private extension ResultsViewController {
     func setupNavigationBarItems() {
         navigationItem.leftBarButtonItem = newGameButton
         newGameButton.target = self

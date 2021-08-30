@@ -12,34 +12,30 @@ class PlayerCell: UITableViewCell {
     let titleLabel: UILabel = {
         let title = UILabel()
         title.textColor = .white
-        title.font = UIFont(name: "Nunito-ExtraBold", size: 20)
+        title.font = UIFont.nunito(20, .extraBold)
         title.translatesAutoresizingMaskIntoConstraints = false
         
         return title
     }()
     
-    let button: UIButton = {
+    let removeButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "deletePlayer"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
-    let deleteView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .red
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.isHidden = true
-        return view
-    }()
-    
-    let deleteLabel: UILabel = {
-       let label = UILabel()
-        label.text = "Delete"
-        label.textColor = .white
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    override func setEditing(_ editing: Bool, animated: Bool) {
+                super.setEditing(editing, animated: animated)
+
+        if editing {
+                for view in subviews where view.description.contains("Reorder") {
+                    for case let subview as UIImageView in view.subviews {
+                        subview.image = UIImage(named: "sort")
+                    }
+                }
+            }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -63,24 +59,15 @@ class PlayerCell: UITableViewCell {
     }
     
     func setupViews() {
-        backgroundColor = UIColor(named: "DarkGray")
-        self.addSubview(button)
+        backgroundColor = UIColor.veryDarkGray
+        self.addSubview(removeButton)
         self.addSubview(titleLabel)
-        self.addSubview(deleteView)
-        deleteView.addSubview(deleteLabel)
         
         NSLayoutConstraint.activate([
-            button.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            button.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: button.trailingAnchor, constant: 15),
-            titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            deleteView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            deleteView.topAnchor.constraint(equalTo: self.topAnchor),
-            deleteView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            deleteView.widthAnchor.constraint(equalTo: self.heightAnchor),
-            deleteLabel.centerYAnchor.constraint(equalTo: deleteView.centerYAnchor),
-            deleteLabel.centerXAnchor.constraint(equalTo: deleteView.centerXAnchor)
+            removeButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            removeButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: removeButton.trailingAnchor, constant: 15),
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
-    
 }

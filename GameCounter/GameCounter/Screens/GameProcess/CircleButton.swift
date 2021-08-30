@@ -16,7 +16,7 @@ class CircleButton: UIButton {
             if newValue {
                 backgroundColor = #colorLiteral(red: 0.3607843137, green: 0.5647058824, blue: 0.5215686275, alpha: 1)
             } else {
-                backgroundColor = UIColor(named: "GulfStream")
+                backgroundColor = UIColor.gulfStream
             }
             super.isHighlighted = newValue
         }
@@ -24,7 +24,7 @@ class CircleButton: UIButton {
     
     init() {
         super.init(frame: .zero)
-        backgroundColor = UIColor(named: "GulfStream")
+        backgroundColor = UIColor.gulfStream
         tintColor = .white
         setTitleShadowColor(#colorLiteral(red: 0.3294117647, green: 0.4705882353, blue: 0.4352941176, alpha: 1), for: .normal)
         titleLabel?.shadowOffset = CGSize(width: 0, height: 2)

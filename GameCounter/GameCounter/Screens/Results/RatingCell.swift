@@ -13,15 +13,15 @@ class RatingCell: UITableViewCell {
      let placeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont(name: "Nunito-ExtraBold", size: 28)
+        label.font = UIFont.nunito(28, .extraBold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
      let nameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(named: "Orange")
-        label.font = UIFont(name: "Nunito-ExtraBold", size: 28)
+        label.textColor = UIColor.manhattan
+        label.font = UIFont.nunito(28, .extraBold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -29,7 +29,7 @@ class RatingCell: UITableViewCell {
      let scoreLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont(name: "Nunito-ExtraBold", size: 28)
+        label.font = UIFont.nunito(28, .extraBold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

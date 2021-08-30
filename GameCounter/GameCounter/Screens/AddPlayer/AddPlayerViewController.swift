@@ -23,23 +23,23 @@ class AddPlayerViewController: UIViewController {
     }()
     
     private let viewTitle: UILabel = {
-            let title = UILabel()
-            title.text = "Add Player"
-            title.textColor = .white
-            title.font = UIFont(name: "Nunito-ExtraBold", size: 36)
-            title.translatesAutoresizingMaskIntoConstraints = false
-            return title
-        }()
+        let title = UILabel()
+        title.text = "Add Player"
+        title.textColor = .white
+        title.font = UIFont.nunito(36, .extraBold)
+        title.translatesAutoresizingMaskIntoConstraints = false
+        return title
+    }()
     
     let playerName: UITextField = {
         let name = UITextField()
         name.translatesAutoresizingMaskIntoConstraints = false
         name.attributedPlaceholder = NSAttributedString(string: "Player Name",
-                                                        attributes: [.font: UIFont(name: "Nunito-ExtraBold", size: 20)!,
+                                                        attributes: [.font: UIFont.nunito(20, .extraBold),
                                                                      NSAttributedString.Key.foregroundColor: UIColor(red: 0.608, green: 0.608, blue: 0.631, alpha: 1)])
         name.textColor = .white
-        name.font = UIFont(name: "Nunito-ExtraBold", size: 20)
-        name.backgroundColor = UIColor(named: "DarkGray")
+        name.font = UIFont.nunito(20, .extraBold)
+        name.backgroundColor = UIColor.veryDarkGray
         name.tintColor = .white
         
         name.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 24, height: name.frame.height))
@@ -54,12 +54,17 @@ class AddPlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         playerName.delegate = self
-        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        view.addGestureRecognizer(tapGestureRecognizer)
         setupViews()
     }
 }
 
-extension AddPlayerViewController {
+private extension AddPlayerViewController {
+    @objc func hideKeyboard() {
+        view.endEditing(true)
+    }
+    
     func setupViews() {
         backButton.action = #selector(backToPlayersList)
         backButton.target = self
@@ -105,7 +110,7 @@ extension AddPlayerViewController: UITextFieldDelegate {
         guard let text = textField.text else {
             return true
         }
-
+        
         if text.count == 1 && string.count == 0 {
             addButton.isEnabled = false
         } else {

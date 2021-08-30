@@ -16,7 +16,7 @@ class NewGameViewController: UIViewController {
             let title = UILabel()
             title.text = "Game Counter"
             title.textColor = .white
-            title.font = UIFont(name: "Nunito-ExtraBold", size: 36)
+        title.font = UIFont.nunito(36, .extraBold)
             title.translatesAutoresizingMaskIntoConstraints = false
             return title
         }()
@@ -63,7 +63,7 @@ class NewGameViewController: UIViewController {
         playersTable.delegate = self;
         playersTable.dataSource = self;
         playersTable.register(PlayerCell.self, forCellReuseIdentifier: "CellId")
-        navigationItem.leftBarButtonItem = cancelButton
+//        navigationItem.leftBarButtonItem = cancelButton
     }
 }
 
@@ -153,17 +153,17 @@ extension NewGameViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = playersTable.dequeueReusableCell(withIdentifier: "CellId", for: indexPath) as! PlayerCell
         cell.titleLabel.text = playersArray[indexPath.row].name
-        cell.button.tag = indexPath.row
-        cell.button.addTarget(self, action: #selector(deleteButtonPressed), for: .touchUpInside)
+        cell.removeButton.tag = indexPath.row
+        cell.removeButton.addTarget(self, action: #selector(deleteButtonPressed), for: .touchUpInside)
         return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
-        headerView.backgroundColor = UIColor(named: "DarkGray")
+        headerView.backgroundColor = UIColor.veryDarkGray
         let label = UILabel()
         label.text = "Players"
-        label.font = UIFont(name: "Nunito-SemiBold", size: 16)
+        label.font = UIFont.nunito(16, .semiBold)
         label.textColor = UIColor(red: 0.922, green: 0.922, blue: 0.961, alpha: 0.6)
         
         headerView.addSubview(label)
@@ -178,7 +178,7 @@ extension NewGameViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footerView = UIView()
-        footerView.backgroundColor = UIColor(named: "DarkGray")
+        footerView.backgroundColor = UIColor.veryDarkGray
         footerView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
         footerView.layer.cornerRadius = 15
         
@@ -187,9 +187,9 @@ extension NewGameViewController: UITableViewDataSource {
         
         let addPlayerButton = UIButton(type: .custom)
         addPlayerButton.setTitle("Add player", for: .normal)
-        addPlayerButton.tintColor = UIColor(named: "GulfStream")
-        addPlayerButton.titleLabel?.font = UIFont(name: "Nunito-SemiBold", size: 16)
-        addPlayerButton.setTitleColor(UIColor(named: "GulfStream"), for: .normal)
+        addPlayerButton.tintColor = UIColor.gulfStream
+        addPlayerButton.titleLabel?.font = UIFont.nunito(16, .semiBold)
+        addPlayerButton.setTitleColor(UIColor.gulfStream, for: .normal)
         addPlayerButton.setImage(UIImage(named: "addPlayer"), for: .normal)
         addPlayerButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
         addPlayerButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
