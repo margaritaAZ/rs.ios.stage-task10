@@ -11,13 +11,17 @@ import UIKit
 struct Player: Codable {
     var name: String
     var score: Int = 0
-//    var turns = [Int]()
-//
-//    mutating func updateScore() {
-//        for turn in turns {
-//            score += turn
-//        }
-//    }
+    var turns: [Int]?
+
+    mutating func updateScore() {
+        score = 0
+        guard let turnsArray = turns else {
+            return
+        }
+        for turn in turnsArray {
+            score += turn
+        }
+    }
 }
 
 struct Players {

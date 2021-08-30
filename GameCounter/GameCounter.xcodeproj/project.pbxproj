@@ -19,6 +19,7 @@
 		F3AA09A326DAB9C200042F93 /* RatingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA09A226DAB9C200042F93 /* RatingCell.swift */; };
 		F3AA09A526DABCF700042F93 /* RatingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA09A426DABCF700042F93 /* RatingTableView.swift */; };
 		F3AA09A826DB956400042F93 /* RollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA09A726DB956400042F93 /* RollViewController.swift */; };
+		F3AA09AC26DD022300042F93 /* PlayerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3AA09AB26DD022300042F93 /* PlayerCollectionViewCell.swift */; };
 		F3B4735026D6461A0071155F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B4734F26D6461A0071155F /* AppDelegate.swift */; };
 		F3B4735926D6461C0071155F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3B4735826D6461C0071155F /* Assets.xcassets */; };
 		F3B4735C26D6461C0071155F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3B4735A26D6461C0071155F /* LaunchScreen.storyboard */; };
@@ -40,6 +41,7 @@
 		F3AA09A226DAB9C200042F93 /* RatingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingCell.swift; sourceTree = "<group>"; };
 		F3AA09A426DABCF700042F93 /* RatingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingTableView.swift; sourceTree = "<group>"; };
 		F3AA09A726DB956400042F93 /* RollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RollViewController.swift; sourceTree = "<group>"; };
+		F3AA09AB26DD022300042F93 /* PlayerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCollectionViewCell.swift; sourceTree = "<group>"; };
 		F3B4734C26D6461A0071155F /* GameCounter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameCounter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3B4734F26D6461A0071155F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F3B4735826D6461C0071155F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -102,8 +104,8 @@
 		F3AA099626D9401A00042F93 /* GameProcess */ = {
 			isa = PBXGroup;
 			children = (
+				F3AA09AD26DD036900042F93 /* CollectionView */,
 				F3AA099026D92A5B00042F93 /* GameProcessViewController.swift */,
-				F3AA099726DA31E400042F93 /* PlayersCollectionView.swift */,
 				F3AA099B26DA5E1B00042F93 /* CircleButton.swift */,
 			);
 			path = GameProcess;
@@ -125,6 +127,15 @@
 				F3AA09A726DB956400042F93 /* RollViewController.swift */,
 			);
 			path = Roll;
+			sourceTree = "<group>";
+		};
+		F3AA09AD26DD036900042F93 /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				F3AA099726DA31E400042F93 /* PlayersCollectionView.swift */,
+				F3AA09AB26DD022300042F93 /* PlayerCollectionViewCell.swift */,
+			);
+			path = CollectionView;
 			sourceTree = "<group>";
 		};
 		F3B4734326D6461A0071155F = {
@@ -252,6 +263,7 @@
 				F3B4735026D6461A0071155F /* AppDelegate.swift in Sources */,
 				F3AA098F26D9162C00042F93 /* Data.swift in Sources */,
 				F3B4736426D64B2A0071155F /* NewGameViewController.swift in Sources */,
+				F3AA09AC26DD022300042F93 /* PlayerCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

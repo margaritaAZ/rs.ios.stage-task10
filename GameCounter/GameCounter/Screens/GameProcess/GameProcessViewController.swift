@@ -75,6 +75,7 @@ class GameProcessViewController: UIViewController {
         button.titleLabel?.font = UIFont(name: "Nunito-ExtraBold", size: 40)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 45
+        button.tag = -1
         return button
     }()
     
@@ -104,6 +105,27 @@ class GameProcessViewController: UIViewController {
         return stackView
     }()
     
+    private let previuosButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "previous_first"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let nextButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "next"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let line: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBarItems()
@@ -112,13 +134,20 @@ class GameProcessViewController: UIViewController {
         startTimer()
         setupScoreButtons()
         playersCollectionView.cells = playersArray
-        pauseButton.addTarget(self, action: #selector(pauseTimer), for: .touchUpInside)
-        playButton.addTarget(self, action: #selector(startTimer), for: .touchUpInside)
-        diceButton.addTarget(self, action: #selector(openDiceScreen), for: .touchUpInside)
+        setupActions()
     }
 }
 
-extension GameProcessViewController {
+private extension GameProcessViewController {
+    func setupActions() {
+        pauseButton.addTarget(self, action: #selector(pauseTimer), for: .touchUpInside)
+        playButton.addTarget(self, action: #selector(startTimer), for: .touchUpInside)
+        diceButton.addTarget(self, action: #selector(openDiceScreen), for: .touchUpInside)
+        previuosButton.addTarget(self, action: #selector(scrollToPrevious), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(scrollToNext), for: .touchUpInside)
+        plusOneButton.addTarget(self, action: #selector(addPoints), for: .touchUpInside)
+    }
+    
     @objc func startTimer() {
         timerLabel.textColor = .white
         pauseButton.isHidden = false
@@ -184,6 +213,69 @@ extension GameProcessViewController {
         return nil
     }
     
+    @objc func addPoints(sender: UIButton) {
+        let playerIndex = playersCollectionView.getActivePlayerIndex()
+        let playerTurns = playersArray[playerIndex].turns
+        let points = sender.tag != -1 ? (Int(scoreValues[sender.tag]) ?? 0) : 1
+        
+        if playerTurns == nil {
+            playersArray[playerIndex].turns = [points]
+        } else {
+            playersArray[playerIndex].turns?.append(points)
+        }
+        
+        playersArray[playerIndex].updateScore()
+        Players().saveToStorage(players: playersArray)
+        playersCollectionView.reloadItems(at: [IndexPath(row: playerIndex, section: 0)])
+    }
+    
+    
+    @objc func scrollToPrevious() {
+        let playerIndex = playersCollectionView.getActivePlayerIndex()
+        if playerIndex == 0 {
+            playersCollectionView.scrollToItem(playersArray.count - 1)
+            nextButton.setImage(UIImage(named: "next_last"), for: .normal)
+        } else {
+            if playerIndex == 1 {
+                previuosButton.setImage(UIImage(named: "previous_first"), for: .normal)
+            } else {
+                previuosButton.setImage(UIImage(named: "previous"), for: .normal)
+            }
+            playersCollectionView.scrollToItem(playerIndex - 1)
+        }
+    }
+    
+    func updatePagingImages() {
+        let playerIndex = playersCollectionView.getActivePlayerIndex()
+        print("player index: \(playerIndex)")
+        if playerIndex == 0 {
+            previuosButton.setImage(UIImage(named: "previous_first"), for: .normal)
+        } else {
+            previuosButton.setImage(UIImage(named: "previous"), for: .normal)
+        }
+        
+        if playerIndex ==  playersArray.count - 1{
+            nextButton.setImage(UIImage(named: "next_last"), for: .normal)
+        } else {
+            nextButton.setImage(UIImage(named: "next"), for: .normal)
+        }
+    }
+    
+    @objc func scrollToNext() {
+        let playerIndex = playersCollectionView.getActivePlayerIndex()
+        if playerIndex == playersArray.count - 1 {
+            playersCollectionView.scrollToItem(0)
+            previuosButton.setImage(UIImage(named: "previous_first"), for: .normal)
+        } else {
+            playersCollectionView.scrollToItem(playerIndex + 1)
+            if playerIndex < playersArray.count - 2{
+                nextButton.setImage(UIImage(named: "next"), for: .normal)
+            } else {
+                nextButton.setImage(UIImage(named: "next_last"), for: .normal)
+            }
+        }
+    }
+    
     private func setupPlayersLettersLabel() {
         var letters = [String]()
         for player in playersArray {
@@ -202,6 +294,7 @@ extension GameProcessViewController {
             button.translatesAutoresizingMaskIntoConstraints = false
             button.heightAnchor.constraint(equalToConstant: 55).isActive = true
             button.widthAnchor.constraint(equalToConstant: 55).isActive = true
+            button.addTarget(self, action: #selector(addPoints), for: .touchUpInside)
             scoreButtonsStackView.addArrangedSubview(button)
         }
         
@@ -226,9 +319,12 @@ extension GameProcessViewController {
         view.addSubview(pauseButton)
         view.addSubview(playersCollectionView)
         view.addSubview(plusOneButton)
+        view.addSubview(previuosButton)
+        view.addSubview(nextButton)
         view.addSubview(undoButton)
         view.addSubview(playersLettersLabel)
         view.addSubview(scoreButtonsStackView)
+//        view.addSubview(line)
         
         NSLayoutConstraint.activate([
             viewTitle.topAnchor.constraint(equalTo: view.topAnchor),
@@ -248,6 +344,10 @@ extension GameProcessViewController {
             plusOneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             plusOneButton.widthAnchor.constraint(equalToConstant: 90),
             plusOneButton.heightAnchor.constraint(equalToConstant: 90),
+            previuosButton.centerYAnchor.constraint(equalTo: plusOneButton.centerYAnchor),
+            previuosButton.trailingAnchor.constraint(equalTo: plusOneButton.leadingAnchor, constant: -60),
+            nextButton.centerYAnchor.constraint(equalTo: plusOneButton.centerYAnchor),
+            nextButton.leadingAnchor.constraint(equalTo: plusOneButton.trailingAnchor, constant: 60),
             undoButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -32),
             undoButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             playersLettersLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -GameProcessConstants.playersLettersToBottom),
@@ -256,6 +356,10 @@ extension GameProcessViewController {
             scoreButtonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             scoreButtonsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             scoreButtonsStackView.bottomAnchor.constraint(equalTo: playersLettersLabel.topAnchor, constant: -GameProcessConstants.playersLettersToSmallButtons)
+//            line.topAnchor.constraint(equalTo: view.topAnchor),
+//            line.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+//            line.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            line.widthAnchor.constraint(equalToConstant: 1)
         ])
     }
     
