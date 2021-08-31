@@ -9,6 +9,7 @@ import UIKit
 
 class GameProcessViewController: UIViewController {
     private var playersArray = Players().getFromStorage() ?? []
+    private var currentPlayer = 0
     private let scoreValues = ["-10", "-5", "-1", "+5", "+10"]
     
     private let newGameButton: UIBarButtonItem = {
@@ -210,7 +211,7 @@ private extension GameProcessViewController {
     }
     
     @objc func addPoints(sender: UIButton) {
-        let playerIndex = playersCollectionView.getActivePlayerIndex()
+        let playerIndex = currentPlayer
         let playerTurns = playersArray[playerIndex].turns
         let points = sender.tag != -1 ? (Int(scoreValues[sender.tag]) ?? 0) : 1
         
@@ -230,7 +231,7 @@ private extension GameProcessViewController {
     }
     
     @objc func scrollToPrevious() {
-        let playerIndex = playersCollectionView.getActivePlayerIndex()
+        let playerIndex = currentPlayer
         var nextActive = 0
         if playerIndex == 0 {
             nextActive = playersArray.count - 1
@@ -239,10 +240,11 @@ private extension GameProcessViewController {
         }
         playersCollectionView.scrollToItem(nextActive)
         setupPlayersLettersLabel(activePlayer: nextActive)
+        currentPlayer = nextActive
     }
     
     @objc func scrollToNext() {
-        let playerIndex = playersCollectionView.getActivePlayerIndex()
+        let playerIndex = currentPlayer
         var nextActive = 0
         
         if playerIndex == playersArray.count - 1 {
@@ -252,6 +254,7 @@ private extension GameProcessViewController {
         }
         playersCollectionView.scrollToItem(nextActive)
         setupPlayersLettersLabel(activePlayer: nextActive)
+        currentPlayer = nextActive
     }
     
     private func setupPlayersLettersLabel(activePlayer: Int) {

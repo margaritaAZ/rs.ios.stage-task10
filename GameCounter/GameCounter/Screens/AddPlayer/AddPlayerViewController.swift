@@ -99,7 +99,7 @@ private extension AddPlayerViewController {
         
         Players().saveToStorage(players: playersArray)
         
-        navigationController?.popToRootViewController(animated: true)
+        navigationController?.popViewController(animated: true)
         
     }
 }

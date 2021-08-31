@@ -78,7 +78,7 @@ class NewGameViewController: UIViewController {
         playersTable.dataSource = self;
         playersTable.register(PlayerCell.self, forCellReuseIdentifier: "CellId")
         
-        cancelButton.action = #selector(returnToGameProcess)
+        cancelButton.action = #selector(returnBack)
         cancelButton.target = self
         if UserDefaults.standard.integer(forKey: "isActiveGameAvaliable") != 1 {
             navigationItem.leftBarButtonItem = nil
@@ -110,8 +110,8 @@ private extension NewGameViewController {
         startGameButton.addTarget(self, action: #selector(startGame), for: .touchUpInside)
     }
     
-    @objc func returnToGameProcess() {
-        navigationController?.popToRootViewController(animated: true)
+    @objc func returnBack() {
+        navigationController?.popViewController(animated: true)
     }
     
     @objc func addPlayer() {
@@ -119,7 +119,6 @@ private extension NewGameViewController {
         
     }
     @objc func startGame() {
-        
         playersArray = playersArray.map { player in
             var player = player
             player.turns = nil
