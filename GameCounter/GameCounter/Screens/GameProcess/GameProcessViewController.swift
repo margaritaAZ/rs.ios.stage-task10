@@ -277,7 +277,7 @@ private extension GameProcessViewController {
             button.tag = i
             button.setTitle(value, for: .normal)
             button.translatesAutoresizingMaskIntoConstraints = false
-            button.heightAnchor.constraint(lessThanOrEqualToConstant: 55).isActive = true
+            button.heightAnchor.constraint(equalToConstant: 55).isActive = true
             button.widthAnchor.constraint(equalTo: button.heightAnchor).isActive = true
             button.addTarget(self, action: #selector(addPoints), for: .touchUpInside)
             scoreButtonsStackView.addArrangedSubview(button)
@@ -323,7 +323,7 @@ private extension GameProcessViewController {
             playersCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             plusOneButton.topAnchor.constraint(equalTo: playersCollectionView.bottomAnchor, constant: GameProcessConstants.bigScoreButtonToPlayers),
             plusOneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            plusOneButton.widthAnchor.constraint(lessThanOrEqualToConstant: 90),
+            plusOneButton.widthAnchor.constraint(equalToConstant: 90),
             plusOneButton.heightAnchor.constraint(equalTo: plusOneButton.widthAnchor),
             previuosButton.centerYAnchor.constraint(equalTo: plusOneButton.centerYAnchor),
             previuosButton.trailingAnchor.constraint(equalTo: plusOneButton.leadingAnchor, constant: -60),

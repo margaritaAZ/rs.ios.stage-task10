@@ -45,6 +45,20 @@ class NewGameViewController: UIViewController {
         return button
     }()
     
+    let addPlayerButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setTitle("Add player", for: .normal)
+        button.tintColor = UIColor.gulfStream
+        button.titleLabel?.font = UIFont.nunito(16, .semiBold)
+        button.setTitleColor(UIColor.gulfStream, for: .normal)
+        button.setImage(UIImage(named: "addPlayer"), for: .normal)
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
+        button.contentHorizontalAlignment = .left
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
@@ -54,6 +68,7 @@ class NewGameViewController: UIViewController {
         playersArray = Players().getFromStorage() ?? []
         playersTable.reloadData()
         isStatGameButtonEnable()
+        isAddPlayerButtonEnable()
     }
     
     override func viewDidLoad() {
@@ -67,8 +82,8 @@ class NewGameViewController: UIViewController {
     }
 }
 
-extension NewGameViewController {
-    private func setupViews () {
+private extension NewGameViewController {
+    func setupViews () {
         view.addSubview(viewTitle)
         view.addSubview(playersTable)
         view.addSubview(startGameButton)
@@ -81,17 +96,17 @@ extension NewGameViewController {
             playersTable.bottomAnchor.constraint(equalTo: startGameButton.topAnchor, constant: -20),
             startGameButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             startGameButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            startGameButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -64),
+            startGameButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60),
             startGameButton.heightAnchor.constraint(equalToConstant: 65)
         ])
         
         startGameButton.addTarget(self, action: #selector(startGame), for: .touchUpInside)
     }
-    @objc private func addPlayer() {
+    @objc func addPlayer() {
         navigationController?.pushViewController(AddPlayerViewController(), animated: true)
         
     }
-    @objc private func startGame() {
+    @objc func startGame() {
         navigationController?.pushViewController(GameProcessViewController(), animated: true)
     }
     
@@ -100,12 +115,16 @@ extension NewGameViewController {
         Players().saveToStorage(players: playersArray)
         playersTable.reloadData()
         isStatGameButtonEnable()
+        isAddPlayerButtonEnable()
     }
     
-    private func isStatGameButtonEnable() {
+    func isStatGameButtonEnable() {
         startGameButton.isEnabled = playersArray.count != 0
     }
     
+    func isAddPlayerButtonEnable() {
+        addPlayerButton.isEnabled = playersArray.count < 6
+    }
     
 }
 
@@ -185,22 +204,11 @@ extension NewGameViewController: UITableViewDataSource {
         let dividerView = UIView()
         dividerView.backgroundColor = UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1)
         
-        let addPlayerButton = UIButton(type: .custom)
-        addPlayerButton.setTitle("Add player", for: .normal)
-        addPlayerButton.tintColor = UIColor.gulfStream
-        addPlayerButton.titleLabel?.font = UIFont.nunito(16, .semiBold)
-        addPlayerButton.setTitleColor(UIColor.gulfStream, for: .normal)
-        addPlayerButton.setImage(UIImage(named: "addPlayer"), for: .normal)
-        addPlayerButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
-        addPlayerButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
-        addPlayerButton.contentHorizontalAlignment = .left
-        
         addPlayerButton.addTarget(self, action: #selector(addPlayer), for: .touchUpInside)
         
         footerView.addSubview(dividerView)
         footerView.addSubview(addPlayerButton)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
-        addPlayerButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             dividerView.topAnchor.constraint(equalTo: footerView.topAnchor),
             dividerView.heightAnchor.constraint(equalToConstant: 1),

@@ -11,7 +11,7 @@ class RatingTableView: UITableView {
     var cells = [Player]()
     
     init() {
-        super.init(frame: .zero, style: .grouped)
+        super.init(frame: .zero, style: .plain)
         
         backgroundColor = .black
         register(RatingCell.self, forCellReuseIdentifier: RatingCell.reuseId)
@@ -47,7 +47,4 @@ extension RatingTableView: UITableViewDelegate {
         50
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        0
-    }
 }
