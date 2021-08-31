@@ -99,13 +99,26 @@ private extension AddPlayerViewController {
         
         Players().saveToStorage(players: playersArray)
         
-        navigationController?.popViewController(animated: true)
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        transition.type = CATransitionType.fade
+        navigationController?.view.layer.add(transition, forKey: nil)
+        navigationController?.popViewController(animated: false)
         
     }
 }
 
 // MARK: UITextFieldDelegate
 extension AddPlayerViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if (textField.text?.count ?? 0) > 0 {
+            addPlayer()
+            return true
+        }
+        return false
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else {
             return true

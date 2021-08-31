@@ -111,11 +111,11 @@ private extension NewGameViewController {
     }
     
     @objc func returnBack() {
-        navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: false)
     }
     
     @objc func addPlayer() {
-        navigationController?.pushViewController(AddPlayerViewController(), animated: true)
+        navigationController?.pushViewController(AddPlayerViewController(), animated: false)
         
     }
     @objc func startGame() {
@@ -129,7 +129,7 @@ private extension NewGameViewController {
         Players().saveToStorage(players: playersArray)
         UserDefaults.standard.set(0.0, forKey: "timer")
         UserDefaults.standard.set(1, forKey: "isActiveGameAvaliable")
-        navigationController?.setViewControllers([GameProcessViewController()], animated: true)
+        navigationController?.setViewControllers([GameProcessViewController()], animated: false)
     }
     
     @objc func deleteButtonPressed(sender: UIButton) {

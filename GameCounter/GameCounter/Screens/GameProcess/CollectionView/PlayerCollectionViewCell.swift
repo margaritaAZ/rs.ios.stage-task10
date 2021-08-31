@@ -21,7 +21,7 @@ class PlayerCollectionViewCell: UICollectionViewCell {
     let scoreLabel: UILabel = {
         let scoreLabel = UILabel()
         scoreLabel.textColor = .white
-        scoreLabel.font = UIFont.nunito(100, .bold)
+        scoreLabel.font = UIFont.nunito(GameProcessConstants.scoreLabelFontSize, .bold)
         scoreLabel.translatesAutoresizingMaskIntoConstraints = false
         return scoreLabel
     }()
@@ -33,6 +33,8 @@ class PlayerCollectionViewCell: UICollectionViewCell {
         
         addSubview(nameLabel)
         addSubview(scoreLabel)
+        
+//        print(UIScreen.main.bounds.height)
         
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(lessThanOrEqualTo: topAnchor, constant: 20),

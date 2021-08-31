@@ -46,7 +46,6 @@ class ResultsViewController: UIViewController {
         setupNavigationBarItems()
         setupViews()
     }
-    
 }
 
 private extension ResultsViewController {
@@ -75,10 +74,10 @@ private extension ResultsViewController {
     }
     
     @objc func openNewGameScreen() {
-        navigationController?.pushViewController(NewGameViewController(), animated: true)
+        navigationController?.pushViewController(NewGameViewController(), animated: false)
     }
     
     @objc func openGameProcess() {
-        navigationController?.popToRootViewController(animated: true)
+        navigationController?.popToRootViewController(animated: false)
     }
 }

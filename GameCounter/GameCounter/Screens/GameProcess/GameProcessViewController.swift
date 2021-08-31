@@ -75,7 +75,6 @@ class GameProcessViewController: UIViewController {
         button.setTitle("+1", for: .normal)
         button.titleLabel?.font = UIFont.nunito(40, .extraBold)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 45
         button.tag = -1
         return button
     }()
@@ -101,7 +100,7 @@ class GameProcessViewController: UIViewController {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
-        stackView.spacing = 15
+        stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -120,13 +119,6 @@ class GameProcessViewController: UIViewController {
         return button
     }()
     
-    private let line: UIView = {
-        let view = UIView()
-        view.backgroundColor = .red
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBarItems()
@@ -136,6 +128,7 @@ class GameProcessViewController: UIViewController {
         setupScoreButtons()
         playersCollectionView.cells = playersArray
         setupActions()
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
     }
     
     override func viewWillLayoutSubviews() {
@@ -210,6 +203,11 @@ private extension GameProcessViewController {
         
     }
     
+    @objc func applicationWillTerminate() {
+        print("applicationWillTerminate")
+        saveTimerToStorage()
+    }
+    
     @objc func addPoints(sender: UIButton) {
         let playerIndex = currentPlayer
         let playerTurns = playersArray[playerIndex].turns
@@ -225,7 +223,7 @@ private extension GameProcessViewController {
         Players().saveToStorage(players: playersArray)
         playersCollectionView.reloadItems(at: [IndexPath(row: playerIndex, section: 0)])
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.scrollToNext()
         }
     }
@@ -269,18 +267,17 @@ private extension GameProcessViewController {
         let attributedString = NSMutableAttributedString(string: letters.joined(separator: " "), attributes: [.foregroundColor: UIColor.veryDarkGray])
         attributedString.addAttribute(.foregroundColor, value: UIColor.white, range: NSRange(location: whiteColorIndex, length: 1))
         playersLettersLabel.attributedText = attributedString
-
+        
     }
     
     private func setupScoreButtons() {
         for (i, value) in scoreValues.enumerated() {
             let button = CircleButton()
-            button.layer.cornerRadius = 55/2
             button.titleLabel?.font = UIFont.nunito(25, .extraBold)
             button.tag = i
             button.setTitle(value, for: .normal)
             button.translatesAutoresizingMaskIntoConstraints = false
-            button.heightAnchor.constraint(equalToConstant: 55).isActive = true
+            button.heightAnchor.constraint(equalToConstant: GameProcessConstants.scoreButtonsSize).isActive = true
             button.widthAnchor.constraint(equalTo: button.heightAnchor).isActive = true
             button.addTarget(self, action: #selector(addPoints), for: .touchUpInside)
             scoreButtonsStackView.addArrangedSubview(button)
@@ -310,6 +307,7 @@ private extension GameProcessViewController {
         view.addSubview(playersLettersLabel)
         view.addSubview(scoreButtonsStackView)
         
+        
         NSLayoutConstraint.activate([
             viewTitle.topAnchor.constraint(equalTo: view.topAnchor),
             viewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -326,7 +324,7 @@ private extension GameProcessViewController {
             playersCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             plusOneButton.topAnchor.constraint(equalTo: playersCollectionView.bottomAnchor, constant: GameProcessConstants.bigScoreButtonToPlayers),
             plusOneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            plusOneButton.widthAnchor.constraint(equalToConstant: 90),
+            plusOneButton.widthAnchor.constraint(equalToConstant: GameProcessConstants.plusOneButtonSize),
             plusOneButton.heightAnchor.constraint(equalTo: plusOneButton.widthAnchor),
             previuosButton.centerYAnchor.constraint(equalTo: plusOneButton.centerYAnchor),
             previuosButton.trailingAnchor.constraint(equalTo: plusOneButton.leadingAnchor, constant: -60),
@@ -339,20 +337,17 @@ private extension GameProcessViewController {
             scoreButtonsStackView.topAnchor.constraint(equalTo: plusOneButton.bottomAnchor, constant: 15),
             scoreButtonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             scoreButtonsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            scoreButtonsStackView.bottomAnchor.constraint(equalTo: playersLettersLabel.topAnchor, constant: -GameProcessConstants.playersLettersToSmallButtons)
-            //            line.topAnchor.constraint(equalTo: view.topAnchor),
-            //            line.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            //            line.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            //            line.widthAnchor.constraint(equalToConstant: 1)
+            scoreButtonsStackView.bottomAnchor.constraint(equalTo: playersLettersLabel.topAnchor, constant: -GameProcessConstants.playersLettersToSmallButtons),
+            scoreButtonsStackView.heightAnchor.constraint(equalToConstant: GameProcessConstants.scoreButtonsSize)
         ])
     }
     
     @objc func openNewGameScreen() {
-        navigationController?.pushViewController(NewGameViewController(), animated: true)
+        navigationController?.pushViewController(NewGameViewController(), animated: false)
     }
     
     @objc func openResults() {
-        navigationController?.pushViewController(ResultsViewController(), animated: true)
+        navigationController?.pushViewController(ResultsViewController(), animated: false)
     }
     
     @objc func openDiceScreen() {
@@ -360,5 +355,7 @@ private extension GameProcessViewController {
         rollVC.modalPresentationStyle = .overCurrentContext
         rollVC.modalTransitionStyle = .crossDissolve
         present(rollVC, animated: true, completion: nil)
+        let generator = UIImpactFeedbackGenerator(style: .heavy)
+        generator.impactOccurred()
     }
 }

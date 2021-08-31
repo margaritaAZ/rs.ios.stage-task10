@@ -57,10 +57,32 @@ struct CollectionViewConstants {
 }
 
 struct GameProcessConstants {
-    static let timerToTitle: CGFloat = 20
-    static let playersToTimer: CGFloat = 20
-    static let bigScoreButtonToPlayers: CGFloat = 20
+    static let timerToTitle: CGFloat = {
+        return UIScreen.main.bounds.height < 700 ? 20 : 40
+    }()
+    static let playersToTimer: CGFloat = {
+        return UIScreen.main.bounds.height < 700 ? 20 : 30
+    }()
+    static let bigScoreButtonToPlayers: CGFloat = {
+        return UIScreen.main.bounds.height < 700 ? 20 : 30
+    }()
     static let smallButtonsToBigButton: CGFloat = 20
     static let playersLettersToSmallButtons: CGFloat = 20
     static let playersLettersToBottom: CGFloat = 30
+    static let plusOneButtonSize: CGFloat = {
+        switch UIScreen.main.bounds.height {
+        case (0..<600):
+            return 60
+        case (600..<700):
+            return 70
+        default:
+            return 90
+        }
+    }()
+    static let scoreButtonsSize: CGFloat = {
+        return UIScreen.main.bounds.height < 600 ? 47 : 55
+    }()
+    static let scoreLabelFontSize: CGFloat = {
+        return UIScreen.main.bounds.height < 700 ? 70 : 100
+    }()
 }
