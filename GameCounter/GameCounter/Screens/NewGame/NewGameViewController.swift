@@ -13,13 +13,13 @@ class NewGameViewController: UIViewController {
     let maxPlayers = 6
     
     private let viewTitle: UILabel = {
-            let title = UILabel()
-            title.text = "Game Counter"
-            title.textColor = .white
+        let title = UILabel()
+        title.text = "Game Counter"
+        title.textColor = .white
         title.font = UIFont.nunito(36, .extraBold)
-            title.translatesAutoresizingMaskIntoConstraints = false
-            return title
-        }()
+        title.translatesAutoresizingMaskIntoConstraints = false
+        return title
+    }()
     
     private let playersTable: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
@@ -59,9 +59,9 @@ class NewGameViewController: UIViewController {
         return button
     }()
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        .lightContent
-    }
+    //    override var preferredStatusBarStyle: UIStatusBarStyle {
+    //        .lightContent
+    //    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -73,12 +73,19 @@ class NewGameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        setNeedsStatusBarAppearanceUpdate()
         setupViews()
         playersTable.delegate = self;
         playersTable.dataSource = self;
         playersTable.register(PlayerCell.self, forCellReuseIdentifier: "CellId")
-//        navigationItem.leftBarButtonItem = cancelButton
+        
+        cancelButton.action = #selector(returnToGameProcess)
+        cancelButton.target = self
+        if UserDefaults.standard.integer(forKey: "isActiveGameAvaliable") != 1 {
+            navigationItem.leftBarButtonItem = nil
+        } else {
+            navigationItem.leftBarButtonItem = cancelButton
+        }
+        
     }
 }
 
@@ -102,12 +109,28 @@ private extension NewGameViewController {
         
         startGameButton.addTarget(self, action: #selector(startGame), for: .touchUpInside)
     }
+    
+    @objc func returnToGameProcess() {
+        navigationController?.popToRootViewController(animated: true)
+    }
+    
     @objc func addPlayer() {
         navigationController?.pushViewController(AddPlayerViewController(), animated: true)
         
     }
     @objc func startGame() {
-        navigationController?.pushViewController(GameProcessViewController(), animated: true)
+        
+        playersArray = playersArray.map { player in
+            var player = player
+            player.turns = nil
+            player.score = 0
+            return player
+        }
+        
+        Players().saveToStorage(players: playersArray)
+        UserDefaults.standard.set(0.0, forKey: "timer")
+        UserDefaults.standard.set(1, forKey: "isActiveGameAvaliable")
+        navigationController?.setViewControllers([GameProcessViewController()], animated: true)
     }
     
     @objc func deleteButtonPressed(sender: UIButton) {

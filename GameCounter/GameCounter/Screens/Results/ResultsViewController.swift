@@ -75,10 +75,10 @@ private extension ResultsViewController {
     }
     
     @objc func openNewGameScreen() {
-        navigationController?.popToRootViewController(animated: true)
+        navigationController?.pushViewController(NewGameViewController(), animated: true)
     }
     
     @objc func openGameProcess() {
-        navigationController?.popViewController(animated: true)
+        navigationController?.popToRootViewController(animated: true)
     }
 }

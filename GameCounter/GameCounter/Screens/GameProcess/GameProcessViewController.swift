@@ -312,13 +312,13 @@ private extension GameProcessViewController {
             viewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             diceButton.centerYAnchor.constraint(equalTo: viewTitle.centerYAnchor),
             diceButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            timerLabel.topAnchor.constraint(lessThanOrEqualTo: viewTitle.bottomAnchor, constant: GameProcessConstants.timerToTitle),
+            timerLabel.topAnchor.constraint(equalTo: viewTitle.bottomAnchor, constant: GameProcessConstants.timerToTitle),
             timerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             playButton.leadingAnchor.constraint(equalTo: timerLabel.trailingAnchor, constant: 28),
             playButton.centerYAnchor.constraint(equalTo: timerLabel.centerYAnchor),
             pauseButton.leadingAnchor.constraint(equalTo: timerLabel.trailingAnchor, constant: 28),
             pauseButton.centerYAnchor.constraint(equalTo: timerLabel.centerYAnchor),
-            playersCollectionView.topAnchor.constraint(lessThanOrEqualTo: timerLabel.bottomAnchor, constant: GameProcessConstants.playersToTimer),
+            playersCollectionView.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: GameProcessConstants.playersToTimer),
             playersCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             playersCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             plusOneButton.topAnchor.constraint(equalTo: playersCollectionView.bottomAnchor, constant: GameProcessConstants.bigScoreButtonToPlayers),
@@ -345,7 +345,7 @@ private extension GameProcessViewController {
     }
     
     @objc func openNewGameScreen() {
-        navigationController?.popToRootViewController(animated: true)
+        navigationController?.pushViewController(NewGameViewController(), animated: true)
     }
     
     @objc func openResults() {

@@ -13,8 +13,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        let newGameVC = NewGameViewController()
-        let navigationVC = UINavigationController(rootViewController: newGameVC)
+        
+        var rootVC: UIViewController = GameProcessViewController()
+        if (UserDefaults.standard.integer(forKey: "isActiveGameAvaliable") != 1) {
+            rootVC = NewGameViewController()
+        }
+        
+        let navigationVC = UINavigationController(rootViewController: rootVC)
         
         UINavigationBar.appearance().barStyle = .black
         UINavigationBar.appearance().isTranslucent = false
